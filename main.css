@@ -48,23 +48,38 @@ body {
     box-shadow:  0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
-.gallery__card > img {
-    align-self: center;
-    object-fit: cover;
-    width: 100%;
-    min-height: 300px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    max-height: 300px;
-    transition: transform 0.5s ease; 
+.gallery__card.liked-card {
+    background-color: blue;
 }
 
-.gallery__card > img[data-src] {
-    object-fit: scale-down;
+.gallery__image__container {
+    position: relative;
+}
+
+.gallery__image__container > img.gallery__image {
+    align-self: center;
+    object-fit: cover;
+    opacity: 0;
+    width: 100%;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    height: 300px;
+    transition-property: opacity transform;
+    transition-duration: 0.5s;
+    transition-timing-function: ease;
+}
+
+.gallery__image__container > img.gallery__image__placeholder {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   height: 40px;
+   width: 40px;
 }
 
 @media (min-width: 400px) {
-    .gallery__card > img:not([data-src]):hover {
+    .gallery__image__container > img.gallery__image:not([data-src]):hover {
         transform: scale(1.1);
         box-shadow:  0 4px 8px 0 rgba(0,0,0,0.2);
         border-radius: 0;

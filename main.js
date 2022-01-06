@@ -1,3 +1,9 @@
+// import {
+//     toggleLike,
+//     updateLikeInLocalStorage,
+//     restoreLikesFromLocalStorage
+// } from './storageService';
+
 // app constants
 // Ideally should go in separate files, but keeping it here for demo simplicity.
 const CONSTANTS = {
@@ -7,9 +13,18 @@ const CONSTANTS = {
   FAKE_DELAY_MS: 500, // for demo purposes.
 };
 
+let likes;
+
 // view variables
 const grid = document.querySelector(".gallery__grid");
-let totalImagesCount = 0;
+
+function createLikesArray({ photos }) {
+  likes = {};
+  photos.forEach((photo) => {
+    likes[photo.id] = false;
+  });
+  console.log(likes);
+}
 
 async function fetchImages() {
   const { API_KEY, NASA_URL } = CONSTANTS;
@@ -17,7 +32,10 @@ async function fetchImages() {
 
   fetch(url)
     .then((res) => res.json())
-    .then((imagesDataJson) => renderGalleryCards(imagesDataJson));
+    .then((imagesDataJson) => {
+      restoreLikesFromLocalStorage(imagesDataJson);
+      renderGalleryCards(imagesDataJson);
+    });
 }
 
 function isImageVisible(image) {
@@ -26,24 +44,24 @@ function isImageVisible(image) {
 
   const topVisible = top > 0 && top < windowHeight;
   const botVisible = bottom > 0 && bottom < windowHeight;
-  if (topVisible || botVisible) {
-    // console.log(top, bottom, windowHeight);
-  }
+
   return topVisible || botVisible;
 }
 
 async function lazyLoadImages() {
-  const { FAKE_DELAY_MS } = CONSTANTS;
+  // const { FAKE_DELAY_MS } = CONSTANTS;
   let imagesRemainToLazyLoad = false;
-  for (let image of document.querySelectorAll(".gallery__card > img.lazy")) {
+  for (let image of document.querySelectorAll(".gallery__image__container > img.lazy")) {
     imagesRemainToLazyLoad = true;
     // start loading the image!
     if (isImageVisible(image)) {
       image.classList.remove("lazy");
-      setTimeout(() => {
-        image.src = image.dataset.src;
-        image.removeAttribute("data-src");
-      }, FAKE_DELAY_MS);
+      image.src = image.dataset.src;
+      image.removeAttribute("data-src");
+      image.onload = function() {
+        image.style.opacity = 1;
+        image.previousElementSibling.remove();
+      }
     }
   }
   // performance optimzn. remove listener when all images have loaded.
@@ -53,12 +71,10 @@ async function lazyLoadImages() {
 }
 
 function renderGalleryCards({ photos }) {
-  //   console.log(photos);
-  // assumming imagesData is an array so we can use .forEach(() => {});
+  // since photos property is an array, so we can use .forEach(() => {});
   const tempGalleryCardsContainer = document.createDocumentFragment();
   photos.forEach((photo) => {
-    const card = renderCard(photo);
-    tempGalleryCardsContainer.appendChild(card);
+    tempGalleryCardsContainer.appendChild(renderCard(photo));
   });
 
   // Assumption - the images data is fetched only once.
@@ -69,22 +85,31 @@ function renderGalleryCards({ photos }) {
 
 function renderCard({ earth_date, img_src, id, rover, camera }) {
   const card = document.createElement("article");
-  card.setAttribute("class", "gallery__card");
-
   const cardName = document.createElement("h5");
+  const cardImageSection = document.createElement('section');
+  const cardImagePlaceholder = document.createElement("img");
+  const cardImage = document.createElement("img");
+  const cardDataSection = document.createElement("section");
+  const cardDate = document.createElement("p");
+  const likeButton = document.createElement("button");
+
+  card.setAttribute("class", "gallery__card");
+  card.setAttribute("id", `card-${id}`);
+  if (likes[id]) card.classList.add("liked-card");
+
   cardName.textContent = `An image clicked with camera 
     ${camera.full_name} by the rover ${rover.name}`;
 
-  const cardDate = document.createElement("p");
   cardDate.setAttribute("class", "gallery__card__date");
   cardDate.textContent = earth_date;
 
-  // Making sure images are accessible!
-  const cardImage = document.createElement("img");
+  cardImagePlaceholder.setAttribute("src", "loading-buffering.gif");
+  cardImagePlaceholder.setAttribute("class", "gallery__image__placeholder");
+
+  // Making sure loaded images are accessible!
   cardImage.setAttribute("data-src", img_src);
   cardImage.setAttribute("id", `img-${id}`);
-  cardImage.setAttribute("class", "lazy");
-  cardImage.setAttribute("src", "loading-buffering.gif");
+  cardImage.setAttribute("class", "lazy gallery__image");
   cardImage.setAttribute(
     "alt",
     `An image clicked with camera 
@@ -96,34 +121,68 @@ function renderCard({ earth_date, img_src, id, rover, camera }) {
     ${camera.full_name} by the rover ${rover.name}`
   );
 
-  const likeButton = document.createElement("button");
   likeButton.setAttribute("class", "gallery__card__like-btn");
-  likeButton.textContent = "Like"; // TODO: Change with icon and unlike
+  likeButton.dataset.imgId = id;
+  likeButton.textContent = likes[id] ? "Liked" : "Like"; // TODO: Change with icon and unlike
+  likeButton.addEventListener("click", toggleLike);
 
-  const cardDataSection = document.createElement("section");
   cardDataSection.setAttribute("class", "gallery__card__data");
 
   cardDataSection.appendChild(cardName);
   cardDataSection.appendChild(cardDate);
   cardDataSection.appendChild(likeButton);
-  card.appendChild(cardImage);
+  
+  cardImageSection.setAttribute('class', 'gallery__image__container');
+
+  cardImageSection.appendChild(cardImagePlaceholder);
+  cardImageSection.appendChild(cardImage);
+
+  card.appendChild(cardImageSection);
   card.appendChild(cardDataSection);
   return card;
 }
 
 function initializeApp() {
   // add event listeners.
+  //   window.addEventListener("DOMContentLoaded", restoreLikesFromLocalStorage)
   window.addEventListener("DOMContentLoaded", fetchImages);
-
   // TODO: can debounce w/ 0.2s
   window.addEventListener("scroll", lazyLoadImages);
 }
+
+// LOCAL STORAGE FUNCTIONALITY --------------------------------
+// TODO: move to a module
+function toggleLike(e) {
+  const btn = e.target;
+  const { imgId } = btn.dataset;
+  console.log(likes);
+  likes[imgId] = likes.hasOwnProperty(imgId) ? !likes[imgId] : true;
+  console.log(likes);
+  document.querySelector(`#card-${imgId}`).classList.toggle("liked-card");
+  updateLikeInLocalStorage();
+}
+
+function updateLikeInLocalStorage() {
+  localStorage.setItem("likes", JSON.stringify(likes));
+}
+
+function restoreLikesFromLocalStorage(imagesDataJson) {
+  const likesFromStorage = localStorage.getItem("likes");
+
+  if (!likesFromStorage) createLikesArray(imagesDataJson);
+  else likes = JSON.parse(localStorage.getItem("likes"));
+  console.log("likes now", likes);
+}
+
+// LOCAL STORAGE FUNCTION END ---------------------------------
 
 initializeApp();
 
 // Assumptions
 // 1. Data fetched only once in bulk
 // 2. Api succeeds with valid data i.e no graceful error handling for now.
+// 3. Same photos are returned from the api everytime (i.e liking an image overwrite full object
+// in localStorage right now for simplicity.)
 
 // Extra features
 // 1. Loading state when images data is being fetched from api- DONE.
@@ -133,9 +192,8 @@ initializeApp();
 // 4. Animated like button
 // 5. Like persistence using local storage
 
-
-
 // TODO
-// refactor some code
+// refactor some code & ordering, fix description / change images.
+// remove console.log & TODOS
 // improve UI
 // host
