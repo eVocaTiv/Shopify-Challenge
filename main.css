@@ -1,0 +1,94 @@
+/* TODO - Add font */
+/* @font-face {
+    font-family: ;
+    src: url()
+} */
+
+:root {
+    --smokegrey:  #f6f6f7;
+}
+
+body {
+    background-color: var(--smokegrey);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.gallery__heading,
+.gallery__description {
+}
+
+.gallery {
+    width: 80%;
+    margin: 0px auto;
+}
+
+.gallery__description {
+    color: darkgray;
+}
+
+.gallery__grid {
+    justify-content: space-evenly;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(auto, 350px));
+}
+
+.gallery__loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gallery__card {
+    display: flex;
+    flex-direction: column;  
+    background-color: white;
+    margin: 5px;
+    border-radius: 5px;
+    outline: 0.1rem solid transparent;
+    box-shadow:  0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.gallery__card > img {
+    align-self: center;
+    object-fit: cover;
+    width: 100%;
+    min-height: 300px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    max-height: 300px;
+    transition: transform 0.5s ease; 
+}
+
+.gallery__card > img[data-src] {
+    object-fit: scale-down;
+}
+
+@media (min-width: 400px) {
+    .gallery__card > img:not([data-src]):hover {
+        transform: scale(1.1);
+        box-shadow:  0 4px 8px 0 rgba(0,0,0,0.2);
+        border-radius: 0;
+    }
+}
+
+.gallery__card__data {
+    padding: 10px;
+}
+
+.gallery__card__date {
+    font-size: 0.8rem;
+}
+
+
+.gallery__card__like-btn  {
+    width: 50px;
+}
+
+
+.gallery__card__like-btn--filled {
+    /* TODO: Add heart button svgs (filled and outlined) */
+}
+
+.gallery__card__like-btn--outlined {
+    /* TODO: Add heart button svgs (filled and outlined) */
+}
