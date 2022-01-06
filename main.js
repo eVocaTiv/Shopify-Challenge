@@ -10,7 +10,8 @@ const CONSTANTS = {
   API_KEY: "X605MlDLFx5s0otyuQWAF3vkxqrOAbaGfGwzfs0N",
   NASA_URL:
     "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&page=2",
-  FAKE_DELAY_MS: 500, // for demo purposes.
+    FAKE_DELAY_250MS: 250, // for demo purposes.
+    FAKE_DELAY_500MS: 500, // for demo purposes.
 };
 
 let likes;
@@ -49,19 +50,24 @@ function isImageVisible(image) {
 }
 
 async function lazyLoadImages() {
-  // const { FAKE_DELAY_MS } = CONSTANTS;
+  const { FAKE_DELAY_250MS } = CONSTANTS;
   let imagesRemainToLazyLoad = false;
-  for (let image of document.querySelectorAll(".gallery__image__container > img.lazy")) {
+  for (let image of document.querySelectorAll(
+    ".gallery__image__container > img.lazy"
+  )) {
     imagesRemainToLazyLoad = true;
     // start loading the image!
     if (isImageVisible(image)) {
       image.classList.remove("lazy");
       image.src = image.dataset.src;
       image.removeAttribute("data-src");
-      image.onload = function() {
-        image.style.opacity = 1;
-        image.previousElementSibling.remove();
-      }
+      // remove placeholder once image fully loads.
+      image.onload = function () {
+        setTimeout(() => {
+          image.style.opacity = 1;
+          image.previousElementSibling.remove();
+        }, FAKE_DELAY_250MS);
+      };
     }
   }
   // performance optimzn. remove listener when all images have loaded.
@@ -78,15 +84,18 @@ function renderGalleryCards({ photos }) {
   });
 
   // Assumption - the images data is fetched only once.
-  document.querySelector(".gallery__loader").remove();
-  grid.appendChild(tempGalleryCardsContainer);
-  lazyLoadImages(); // load images that are visible on page load.
+  const {FAKE_DELAY_500MS} = CONSTANTS;
+  setTimeout(() => {
+    document.querySelector(".gallery__loader").remove();
+    grid.appendChild(tempGalleryCardsContainer);
+    lazyLoadImages(); // load images that are visible on page load.
+  }, FAKE_DELAY_500MS);
 }
 
 function renderCard({ earth_date, img_src, id, rover, camera }) {
   const card = document.createElement("article");
   const cardName = document.createElement("h5");
-  const cardImageSection = document.createElement('section');
+  const cardImageSection = document.createElement("section");
   const cardImagePlaceholder = document.createElement("img");
   const cardImage = document.createElement("img");
   const cardDataSection = document.createElement("section");
@@ -131,8 +140,8 @@ function renderCard({ earth_date, img_src, id, rover, camera }) {
   cardDataSection.appendChild(cardName);
   cardDataSection.appendChild(cardDate);
   cardDataSection.appendChild(likeButton);
-  
-  cardImageSection.setAttribute('class', 'gallery__image__container');
+
+  cardImageSection.setAttribute("class", "gallery__image__container");
 
   cardImageSection.appendChild(cardImagePlaceholder);
   cardImageSection.appendChild(cardImage);
@@ -148,6 +157,7 @@ function initializeApp() {
   window.addEventListener("DOMContentLoaded", fetchImages);
   // TODO: can debounce w/ 0.2s
   window.addEventListener("scroll", lazyLoadImages);
+  window.addEventListener('resize', lazyLoadImages);
 }
 
 // LOCAL STORAGE FUNCTIONALITY --------------------------------
