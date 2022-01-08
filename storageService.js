@@ -1,4 +1,5 @@
-// Private methods
+// Private functions.
+
 function _createLikesArray({ photos }) {
   const likes = {};
   photos.forEach((photo) => {
@@ -7,7 +8,8 @@ function _createLikesArray({ photos }) {
   return likes;
 }
 
-// Exposed methods.
+// Exposed functions.
+
 function updateLikesInLocalStorage(likes) {
   localStorage.setItem("likes", JSON.stringify(likes));
 }
@@ -17,7 +19,6 @@ function restoreLikesFromLocalStorage(imagesDataJson) {
   let likes = {};
   if (!likesFromStorage) likes = _createLikesArray(imagesDataJson);
   else likes = JSON.parse(localStorage.getItem("likes"));
-  console.log("likes now", likes);
   return likes;
 }
 

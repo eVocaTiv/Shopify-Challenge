@@ -8,24 +8,29 @@
   </head>
   <body>
     <main class="gallery">
-      <h3 class="gallery__heading">Spacestagram</h3>
-      <p class="gallery__description">
-        Brought to you by NASA's image API
-        <br />
-        Demo by Kunal Dewan :)
-      </p>
+      <section class="gallery__details">
+        <h3 class="gallery__heading">Spacestagram</h3>
+        <p class="gallery__description">
+          Brought to you by NASA's image API
+          <br />
+          Demo by Kunal Dewan :)
+        </p>
+      </section>
+
       <div class="gallery__loader">
         <img
           src="loading-buffering.gif"
-          alt="A spinning indicating loading screen."
+          alt="A spinner indicating loading screen."
         />
-        <br />
+        <hr />
         <span class="gallery__loader__msg">Ringing up NASA....</span>
       </div>
-      <article class="gallery__grid">
+
+      <section class="gallery__grid">
         <!-- Grid cards are dynamically populated using JS -->
-      </article>
+      </section>
     </main>
+    <!-- Async script. -->
     <script type="module" src="main.js"></script>
   </body>
 </html>

@@ -5,156 +5,147 @@
 } */
 
 :root {
-    --smokegrey:  #f6f6f7;
+  --smokegrey: #f6f6f7;
 }
 
 body {
-    background-color: var(--smokegrey);
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-
-.gallery__heading,
-.gallery__description {
+  background-color: var(--smokegrey);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .gallery {
-    width: 80%;
-    margin: 0px auto;
+  width: 80%;
+  margin: 0px auto;
+}
+
+.gallery__details {
+  text-align: center;
 }
 
 .gallery__description {
-    color: darkgray;
+  color: darkgray;
 }
 
 .gallery__grid {
-    justify-content: space-evenly;
-    display: grid;
-    grid-gap: 1em;
-    grid-template-columns: repeat(auto-fit, minmax(auto, 350px));
+  display: grid;
+  grid-gap: 1em;
+  grid-template-columns: repeat(auto-fit, minmax(auto, 350px));
+  justify-content: space-evenly;
 }
 
 .gallery__loader {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
-
 
 .gallery__loader__msg {
-    display: inline-block;
-    margin: 20px auto;
+  display: inline-block;
+  margin: 20px auto;
 }
 
 .gallery__card {
-    display: flex;
-    flex-direction: column;  
-    background-color: white;
-    margin: 5px;
-    border-radius: 5px;
-    box-shadow:  0 4px 8px 0 rgba(0,0,0,0.2);
-    overflow: hidden;
-}
-
-.gallery__card {
-    outline: 2px solid transparent;
-    transition: outline 400ms ease;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  margin: 5px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  outline: 2px solid transparent;
+  transition: outline 400ms ease;
 }
 
 .gallery__card.liked-card {
-    outline: 2px solid red;
+  outline: 2px solid red;
 }
 
 .gallery__image__container {
-    position: relative;
-    overflow: hidden;
+  position: relative;
+  overflow: hidden;
+  height: 300px;
+  width: 100%;
 }
 
 .gallery__image__container > img.gallery__image {
-    align-self: center;
-    object-fit: cover;
-    opacity: 0;
-    width: 100%;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    height: 300px;
-    transition-property: opacity transform;
-    transition-duration: 0.5s;
-    transition-timing-function: ease;
+  align-self: center;
+  object-fit: cover;
+  opacity: 0;
+  width: 100%;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  height: 300px;
+  transition-property: opacity transform;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
 }
 
 @media (min-width: 400px) {
-    .gallery__image__container > img.gallery__image:hover {
-        transform: scale(1.3);
-    }
+  .gallery__image__container > img.gallery__image:hover {
+    transform: scale(1.3);
+  }
 }
 
 .gallery__image__container > img.gallery__image__placeholder {
-   position: absolute;
-   top: 50%;
-   left: 50%;
-   transform: translate(-50%, -50%);
-   height: 40px;
-   width: 40px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 40px;
+  width: 40px;
 }
 
-
 .gallery__card__data {
-    padding: 0px 20px 20px 20px;
+  padding: 0px 20px 20px 20px;
 }
 
 .gallery__card__date {
-    font-size: 0.8rem;
+  font-size: 0.8rem;
 }
 
-
-.gallery__card__like-btn  {
-    width: 50px;
-    outline: none;
-    border: none;
-    background-color: transparent;
-    transition: transform 400ms ease;
+.gallery__card__like-btn {
+  width: 50px;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  transition: transform 400ms ease;
 }
 
 /* Proper outline on tab-based focus for accessibility. */
-.gallery__card__like-btn:focus-visible  {
-    outline: 2px solid green;
+.gallery__card__like-btn:focus-visible {
+  outline: 2px solid green;
 }
-
 
 /* Assign svg icons to the buttons depending if the card is liked or not. */
 .gallery__card__like-btn::before {
-    cursor: pointer;
-    content: url('heart-outline.svg');
+  cursor: pointer;
+  content: url("heart-outline.svg");
 }
 
 .liked-card .gallery__card__like-btn::before {
-    content: url('heart-filled.svg');
-    cursor: pointer;
+  cursor: pointer;
+  content: url("heart-filled.svg");
 }
 
 /* Animation for like (heart) button */
 @keyframes breathe {
-    0% {
-        transform: scale(1);
-        filter: hue-rotate(0);
-    } 
+  0% {
+    transform: scale(1);
+    filter: hue-rotate(0);
+  }
 
-    50% {
-        transform: scale(1.3);
-        filter: hue-rotate(-90deg);
-    }
+  50% {
+    transform: scale(1.3);
+    filter: hue-rotate(-90deg);
+  }
 
-    100% {
-        transform: scale(1);
-        filter: hue-rotate(0);
-    }
+  100% {
+    transform: scale(1);
+    filter: hue-rotate(0);
+  }
 }
 
 .gallery__card__like-btn:hover {
-    animation: breathe 2s ease;
-    animation-iteration-count: infinite;
+  animation: breathe 2s ease;
+  animation-iteration-count: infinite;
 }
-
-
-
