@@ -6,7 +6,7 @@
 
 :root {
   --smokegrey: #f6f6f7;
-  --shopify-green:#5E8E3E;
+  --shopify-green: #5e8e3e;
 }
 
 body {
@@ -146,7 +146,9 @@ body {
   }
 }
 
-.gallery__card__like-btn:hover {
-  animation: breathe 2s ease;
-  animation-iteration-count: infinite;
+@media (min-width: 400px) {
+  .gallery__card__like-btn:hover {
+    animation: breathe 2s ease;
+    animation-iteration-count: infinite;
+  }
 }
