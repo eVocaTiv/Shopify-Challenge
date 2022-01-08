@@ -6,6 +6,7 @@
 
 :root {
   --smokegrey: #f6f6f7;
+  --shopify-green:#5E8E3E;
 }
 
 body {
@@ -113,7 +114,7 @@ body {
 
 /* Proper outline on tab-based focus for accessibility. */
 .gallery__card__like-btn:focus-visible {
-  outline: 2px solid green;
+  outline: 2px solid var(--shopify-green);
 }
 
 /* Assign svg icons to the buttons depending if the card is liked or not. */
