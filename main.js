@@ -65,7 +65,7 @@ function renderCard({ earth_date, img_src, id, rover, camera }) {
   cardDate.textContent = earth_date;
 
   // Making sure images are accessible!
-  cardImagePlaceholder.setAttribute("src", "loading-buffering.gif");
+  cardImagePlaceholder.setAttribute("src", "assets/loading-buffering.gif");
   cardImagePlaceholder.setAttribute("class", "gallery__image__placeholder");
   cardImagePlaceholder.setAttribute(
     "alt",

@@ -120,12 +120,12 @@ body {
 /* Assign svg icons to the buttons depending if the card is liked or not. */
 .gallery__card__like-btn::before {
   cursor: pointer;
-  content: url("heart-outline.svg");
+  content: url("assets/heart-outline.svg");
 }
 
 .liked-card .gallery__card__like-btn::before {
   cursor: pointer;
-  content: url("heart-filled.svg");
+  content: url("assets/heart-filled.svg");
 }
 
 /* Animation for like (heart) button */
