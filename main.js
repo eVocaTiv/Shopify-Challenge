@@ -58,7 +58,7 @@ function renderCard({ earth_date, img_src, id, rover, camera }) {
   card.setAttribute("id", `card-${id}`);
   if (likes[id]) card.classList.add("liked-card");
 
-  cardName.textContent = `An image clicked with camera 
+  cardName.textContent = `An image clicked with 
     ${camera.full_name} by the rover ${rover.name}`;
 
   cardDate.setAttribute("class", "gallery__card__date");
